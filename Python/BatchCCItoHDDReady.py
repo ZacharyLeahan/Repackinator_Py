@@ -2,6 +2,8 @@ import os
 import subprocess
 import shutil
 
+#This script needs to be run as administrator to register the Repackinator tool for context menu use and os file operations.    
+
 # Register Repackinator for context menu
 def run_repackinator_register(repackinator_path):
     register_cmd = f'"{repackinator_path}" -a=register'
@@ -46,21 +48,35 @@ def extract_and_move(cci_file, repackinator_path, output_directory):
     print(f"Source Path: {source_path}")
     print(f"Destination Path: {dest_path}")
 
+      # Ensure destination directory exists
+    os.makedirs(dest_path, exist_ok=True)
+
     # Check if source path exists and then move
     if os.path.exists(source_path):
         # Move the contents of the extracted folder to the destination
         for item in os.listdir(source_path):
             source_item = os.path.join(source_path, item)
             dest_item = os.path.join(dest_path, item)
-            shutil.move(source_item, dest_item)
+            try:
+                if os.path.isfile(source_item):
+                    shutil.move(source_item, dest_item)
+                elif os.path.isdir(source_item):
+                    shutil.move(source_item, dest_item)
+                else:
+                    print(f"Item not found: {source_item}")
+            except Exception as e:
+                print(f"Error moving item {source_item}: {e}")
         
-        # Remove the empty source folder
-        os.rmdir(source_path)
+        # Remove the source folder, now it should be empty or contain only unprocessed items
+        try:
+            shutil.rmtree(source_path)
+        except OSError as e:
+            print(f"Error removing directory {source_path}: {e}")
     else:
         print(f"Warning: Extracted folder not found for {cci_file}")
 
 def main():
-    cci_directory = "E:\\XBOX Master Game Collection [CCI]\\USA - GLOBAL\\CCI" # Change this to the directory where your CCI files are located
+    cci_directory = "E:\\XBOX Master Game Collection [CCI]\\PAL\\CCI" # Change this to the directory where your CCI files are located
     repackinator_path = "C:\\Repackinator-win-x64\\repackinator.exe" # Change this to the path where you have Repackinator installed
     output_directory = "E:\\output" # Change this to the directory where you want the extracted files to be placed
 
