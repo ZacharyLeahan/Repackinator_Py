@@ -76,7 +76,7 @@ def extract_and_move(cci_file, repackinator_path, output_directory):
         print(f"Warning: Extracted folder not found for {cci_file}")
 
 def main():
-    cci_directory = "E:\\XBOX Master Game Collection [CCI]\\PAL\\CCI" # Change this to the directory where your CCI files are located
+    cci_directory = "E:\\source" # Change this to the directory where your CCI files are located
     repackinator_path = "C:\\Repackinator-win-x64\\repackinator.exe" # Change this to the path where you have Repackinator installed
     output_directory = "E:\\output" # Change this to the directory where you want the extracted files to be placed
 
